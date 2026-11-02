@@ -26,7 +26,7 @@
   }
   main { max-width: 720px; margin: 0 auto; padding: 64px 16px 72px; }
 
-  header { display: flex; align-items: center; gap: 16px; }
+  header { display: flex; align-items: center; justify-content: center; gap: 16px; }
   header svg { width: 64px; height: 64px; flex: none; }
   .tray { fill: var(--fg); }
   .bars { fill: var(--accent); }
@@ -36,7 +36,7 @@
   }
   h1 span { color: var(--accent); }
 
-  nav { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin: 12px 0 36px; }
+  nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 12px 0 36px; }
   nav a {
     display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px;
     border-radius: 8px; font-weight: 600; text-decoration: none;
@@ -69,8 +69,6 @@
 
   @media (max-width: 560px) {
     main { padding-top: 40px; }
-    header { justify-content: center; }
-    nav { justify-content: center; }
     nav a { width: 44px; padding: 0; justify-content: center; }
     nav a svg { width: 20px; height: 20px; }
     nav a .txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
