@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="inbox-mcp logo">
+  <g fill="#d9480f">
+    <rect x="13.5" y="14" width="5" height="8" rx="2.5"/>
+    <rect x="21.5" y="10" width="5" height="16" rx="2.5"/>
+    <rect x="29.5" y="6" width="5" height="24" rx="2.5"/>
+    <rect x="37.5" y="10" width="5" height="16" rx="2.5"/>
+    <rect x="45.5" y="14" width="5" height="8" rx="2.5"/>
+  </g>
+  <path d="M6 36h12l4 8h20l4-8h12v16a6 6 0 0 1-6 6H12a6 6 0 0 1-6-6z" fill="#1d1d1b"/>
+</svg>

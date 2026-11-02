@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/logo.svg" width="120" alt="inbox-mcp logo"></p>
+
 # inbox-mcp
 
 A tiny, single-purpose [MCP](https://modelcontextprotocol.io) server that lets you
