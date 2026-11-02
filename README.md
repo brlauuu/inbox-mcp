@@ -1,17 +1,17 @@
 # inbox-mcp
 
 A tiny, single-purpose [MCP](https://modelcontextprotocol.io) server that lets you
-create GitHub issues by voice from a **Pebble Index 01** ring.
+create GitHub issues by voice.
 
-The full GitHub MCP server can reach every repository your token can see. This relay
-can't. It exposes exactly one tool, `create_issue`, and that tool always files into one
-hard-coded repository: [`brlauuu/inbox`](https://github.com/brlauuu/inbox). The model
-never picks the owner or repo, so a misheard project name ends up in the issue body
-instead of sending the issue to the wrong place. You triage the inbox later.
+**Why**: because using GitHub's official MCP is hard when you give weird names to your repos and the transcription agents can't parse them out. Especially when English is not your native language.
+
+`inbox-mcp` allows you to choose one repo, stuff all the issues there, irrelevant how poorly transcribed they are, and then transfer them to the right repo.
+
+I use it for interaction with my [**Pebble Index 01**](https://repebble.com/index) ring:
 
 ```
-Pebble ring ──voice──▶ Pebble app (LLM) ──MCP / HTTPS──▶ inbox-mcp ──REST──▶ GitHub: brlauuu/inbox
-                                      Bearer PROXY_TOKEN             Bearer GITHUB_PAT
+Pebble ring ──voice──▶ Pebble app (LLM) ──MCP / HTTPS──▶ inbox-mcp ──REST──▶ GitHub: <GITHUB_REPO>
+                                        Bearer PROXY_TOKEN        Bearer GITHUB_PAT
 ```
 
 It runs as a Cloudflare Worker or a Vercel Function. There are no dependencies and no
@@ -36,9 +36,16 @@ build step.
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `GITHUB_PAT`  | A **fine-grained** personal access token scoped to the inbox repo only, with **Issues: Read and write**. Nothing else is needed. |
 | `PROXY_TOKEN` | A long random string the Pebble app sends as its bearer token. Generate one with `openssl rand -hex 32`.                            |
+| `GITHUB_REPO` | The one repository every issue goes to, as `owner/repo` (for example `brlauuu/inbox`). Clients can't override it.                  |
 
-To target a different repository, change `OWNER` and `REPO` at the top of
-[`worker.js`](worker.js).
+If `GITHUB_REPO` is missing or malformed, `create_issue` returns an error and never calls GitHub.
+
+### Keeping your issues private
+
+GitHub has no per-issue privacy: a public repo's issues are always public. Because
+`inbox-mcp` files into a *separate* repository, you can still keep them private.
+Make the `GITHUB_REPO` repository private, and give `GITHUB_PAT` access to just that
+repo. This code repo can stay public.
 
 ## Deploy to Cloudflare Workers
 
@@ -46,12 +53,13 @@ To target a different repository, change `OWNER` and `REPO` at the top of
 npx wrangler login
 npx wrangler secret put GITHUB_PAT
 npx wrangler secret put PROXY_TOKEN
+npx wrangler secret put GITHUB_REPO   # e.g. brlauuu/inbox
 npx wrangler deploy
 ```
 
 Your endpoint is `https://inbox-mcp.<your-subdomain>.workers.dev/`.
 
-For local testing, put the two secrets in a `.dev.vars` file (it's gitignored) and run
+For local testing, put the three values in a `.dev.vars` file (it's gitignored) and run
 `npx wrangler dev`.
 
 ## Deploy to Vercel
@@ -63,6 +71,7 @@ of the Worker `env`. [`vercel.json`](vercel.json) routes every path to it.
 npx vercel link
 npx vercel env add GITHUB_PAT production
 npx vercel env add PROXY_TOKEN production
+npx vercel env add GITHUB_REPO production   # e.g. brlauuu/inbox
 npx vercel deploy --prod
 ```
 
@@ -102,3 +111,4 @@ curl -s "$URL" -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/j
 | `api/index.js`  | Vercel Function entrypoint that reuses `worker.js`          |
 | `vercel.json`   | Routes all Vercel paths to the function                     |
 | `package.json`  | Marks the project as ES modules. It has no dependencies.   |
+| `docs/`         | GitHub Pages site                                           |

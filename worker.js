@@ -1,8 +1,8 @@
 // Minimal MCP server (Streamable HTTP) for Pebble Index 01.
-// Exposes one tool, create_issue, that always files into a fixed repo.
+// Exposes one tool, create_issue, that always files into one repo, set by the
+// GITHUB_REPO secret/env var ("owner/repo"). The client can never choose the repo.
 
-const OWNER = "brlauuu";
-const REPO = "inbox";
+const REPO_PATTERN = /^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/;
 
 const SUPPORTED_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"];
 
@@ -92,7 +92,16 @@ async function callTool(msg, env) {
   const title = String(args.title ?? "").trim();
   if (!title) return toolResult(msg.id, "A title is required.", true);
 
-  const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues`, {
+  const repo = String(env.GITHUB_REPO ?? "").trim();
+  if (!REPO_PATTERN.test(repo)) {
+    return toolResult(
+      msg.id,
+      "Server misconfigured: GITHUB_REPO must be set to \"owner/repo\".",
+      true,
+    );
+  }
+
+  const res = await fetch(`https://api.github.com/repos/${repo}/issues`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${env.GITHUB_PAT}`,
