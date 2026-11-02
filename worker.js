@@ -2,7 +2,7 @@
 // Exposes one tool, create_issue, that always files into one repo, set by the
 // GITHUB_REPO secret/env var ("owner/repo"). The client can never choose the repo.
 
-const VERSION = "0.0.1";
+const VERSION = "0.0.2";
 
 const REPO_PATTERN = /^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/;
 

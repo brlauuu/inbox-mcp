@@ -2,8 +2,10 @@
 
 ## Unreleased
 
-- `skills/triage-inbox`: a Claude Code skill that walks through the inbox and files each issue into the repo it belongs to.
+## 0.0.2 — 2026-11-02
+
 - Docs: note that GitHub can't transfer issues from a private inbox to a public repository.
+- `skills/triage-inbox`: a Claude Code skill that walks through the inbox and files each issue into the repo it belongs to.
 
 ## 0.0.1 — 2026-11-02
 
