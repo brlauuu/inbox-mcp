@@ -116,8 +116,8 @@ curl -s "$URL" -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/j
 
 Once issues pile up in the inbox, something has to move them to the right repos.
 [`skills/triage-inbox`](skills/triage-inbox/SKILL.md) is a
-[Claude Code](https://claude.com/claude-code) skill for that job. Use it. It goes through the
-open inbox issues with you, one at a time:
+[Claude Code](https://claude.com/claude-code) skill for that job. It goes through the open
+inbox issues with you, one at a time:
 
 - works out which of your repos each issue was meant for, even when the name was misheard
 - cleans up the dictated title and body, and asks you about anything unclear
