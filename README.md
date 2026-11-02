@@ -38,7 +38,7 @@ build step.
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `GITHUB_PAT`  | A **fine-grained** personal access token scoped to the inbox repo only, with **Issues: Read and write**. Nothing else is needed. |
 | `PROXY_TOKEN` | A long random string the Pebble app sends as its bearer token. Generate one with `openssl rand -hex 32`.                            |
-| `GITHUB_REPO` | The one repository every issue goes to, as `owner/repo` (for example `brlauuu/inbox`). Clients can't override it.                  |
+| `GITHUB_REPO` | The one repository every issue goes to, as `owner/repo` (for example `your-name/issue-inbox`). Clients can't override it.                  |
 
 If `GITHUB_REPO` is missing or malformed, `create_issue` returns an error and never calls GitHub.
 
@@ -55,7 +55,7 @@ repo. This code repo can stay public.
 npx wrangler login
 npx wrangler secret put GITHUB_PAT
 npx wrangler secret put PROXY_TOKEN
-npx wrangler secret put GITHUB_REPO   # e.g. brlauuu/inbox
+npx wrangler secret put GITHUB_REPO   # e.g. your-name/issue-inbox
 npx wrangler deploy
 ```
 
@@ -73,7 +73,7 @@ of the Worker `env`. [`vercel.json`](vercel.json) routes every path to it.
 npx vercel link
 npx vercel env add GITHUB_PAT production
 npx vercel env add PROXY_TOKEN production
-npx vercel env add GITHUB_REPO production   # e.g. brlauuu/inbox
+npx vercel env add GITHUB_REPO production   # e.g. your-name/issue-inbox
 npx vercel deploy --prod
 ```
 
