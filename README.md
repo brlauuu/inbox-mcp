@@ -49,6 +49,14 @@ GitHub has no per-issue privacy: a public repo's issues are always public. Becau
 Make the `GITHUB_REPO` repository private, and give `GITHUB_PAT` access to just that
 repo. This code repo can stay public.
 
+### Moving issues out of the inbox
+
+GitHub only transfers issues between repositories with the same owner, and it
+[can't transfer an issue from a private repository to a public one](https://docs.github.com/en/issues/tracking-your-work-with-issues/administering-issues/transferring-an-issue-to-another-repository).
+If your inbox is private, `gh issue transfer` and the **Transfer issue** button work only
+when the target repo is private too. For a public target, create a new issue there
+and close the inbox copy.
+
 ## Deploy to Cloudflare Workers
 
 ```sh
@@ -104,6 +112,31 @@ curl -s "$URL" -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/j
   -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"create_issue","arguments":{"title":"Test from curl","body":"Hello from inbox-mcp"}}}'
 ```
 
+## Triage your inbox
+
+Once issues pile up in the inbox, something has to move them to the right repos.
+[`skills/triage-inbox`](skills/triage-inbox/SKILL.md) is a
+[Claude Code](https://claude.com/claude-code) skill for that job. It goes through the open
+inbox issues with you, one at a time:
+
+- works out which of your repos each issue was meant for, even when the name was misheard
+- cleans up the dictated title and body, and asks you about anything unclear
+- files the issue once you approve it: a transfer when GitHub allows one, otherwise a new
+  issue plus closing the inbox copy
+
+Nothing is created without your OK. You need the [`gh` CLI](https://cli.github.com),
+logged in with access to the inbox and your target repos.
+
+To install it, copy the folder into your inbox repo (or into `~/.claude/skills/` to use it
+anywhere):
+
+```sh
+mkdir -p .claude/skills
+cp -r path/to/inbox-mcp/skills/triage-inbox .claude/skills/
+```
+
+Then run `/triage-inbox` in Claude Code from the inbox repo.
+
 ## Files
 
 | File            | What it is                                                  |
@@ -114,3 +147,4 @@ curl -s "$URL" -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/j
 | `vercel.json`   | Routes all Vercel paths to the function                     |
 | `package.json`  | Marks the project as ES modules. It has no dependencies.   |
 | `docs/`         | GitHub Pages site                                           |
+| `skills/`       | Claude Code skill for triaging the inbox                    |
