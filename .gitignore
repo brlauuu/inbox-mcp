@@ -1,0 +1,6 @@
+.wrangler/
+.vercel/
+.enola/
+node_modules/
+.dev.vars
+.env*
